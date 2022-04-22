@@ -1,0 +1,11 @@
++++ myconfig.py	2021-08-13 16:16:35.438788815 +0200
+--- myconfig.py.orig	2021-08-13 16:14:15.925401217 +0200
+@@ -31,2 +31,8 @@
+ 
++###PATCH-HEADER:Marvelmind###
++HAVE_MARVELMIND = True     #Turn on/off the GPS
++MARVELMIND_SERVICES = ["gps", "imu"] #List of services. Available: "gps", "quality", "imu", "imu-fusion"
++MARVELMIND_TTY = "/dev/ttyACM0" #Pseudofile of the beacons USB connection
++HEDGE_ADDR = 5
++###PATCH-FOOTER:Marvelmind###
+ 

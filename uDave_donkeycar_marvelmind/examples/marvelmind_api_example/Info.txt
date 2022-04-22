@@ -1,0 +1,1 @@
+The API's C-Python interface should use a global headge pointer, so the safe destroy of the side-task, and the variable consistensy can be preserved. Otherwise a segmentation fault can happen. please use the global API implementation for correct work. The other codes are still preserved for documenting and other kind of test running for the future.

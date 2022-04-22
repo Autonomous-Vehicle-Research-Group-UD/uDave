@@ -1,0 +1,57 @@
+--- manage.py
++++ manage.py.new
+@@ -32,1 +32,4 @@
++###PATCH-HEADER:Marvelmind###
++from donkeycar.parts.marvelmind import Marvelmind
++###PATCH-FOOTER:Marvelmind###
+ from donkeycar.utils import *
+@@ -259,7 +262,19 @@
+-    #IMU
+-    if cfg.HAVE_IMU:
+-        from donkeycar.parts.imu import Mpu6050
+-        imu = Mpu6050()
+-        V.add(imu, outputs=['imu/acl_x', 'imu/acl_y', 'imu/acl_z',
+-            'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z'], threaded=True)
+-
++    #IMU
++    if cfg.HAVE_IMU:
++        from donkeycar.parts.imu import Mpu6050
++        imu = Mpu6050()
++        V.add(imu, outputs=['imu/acl_x', 'imu/acl_y', 'imu/acl_z',
++            'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z'], threaded=True)
++
++###PATCH-HEADER:Marvelmind###
++    if cfg.HAVE_MARVELMIND:
++        global gps
++        if cfg.HEDGE_ADDR:
++            addr = cfg.HEDGE_ADDR
++        else:
++            addr = None
++        gps = Marvelmind(addr=addr, usb_tty=cfg.MARVELMIND_TTY,services=cfg.MARVELMIND_SERVICES)
++        #V.add(gps, outputs=['gps/pos_x','gps/pos_y','gps/pos_z','gps/v_x', 'gps/v_y', 'gps/v_z','gps/a_x', 'gps/a_y', 'gps/a_z','gps/timestamp'], threaded=True)
++        V.add(gps,outputs=list(gps.datakeys),threaded=True)
++###PATCH-FOOTER:Marvelmind###
++
+@@ -529,7 +544,15 @@
+-    if cfg.HAVE_IMU:
+-        inputs += ['imu/acl_x', 'imu/acl_y', 'imu/acl_z',
+-            'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z']
+-
+-        types +=['float', 'float', 'float',
+-           'float', 'float', 'float']
+-
++    if cfg.HAVE_IMU:
++        inputs += ['imu/acl_x', 'imu/acl_y', 'imu/acl_z',
++            'imu/gyr_x', 'imu/gyr_y', 'imu/gyr_z']
++
++        types +=['float', 'float', 'float',
++           'float', 'float', 'float']
++
++###PATCH-HEADER:Marvelmind###
++    if cfg.HAVE_MARVELMIND:
++        #inputs += ['gps/pos_x','gps/pos_y','gps/pos_z','gps/v_x', 'gps/v_y', 'gps/v_z','gps/a_x', 'gps/a_y', 'gps/a_z','gps/timestamp']
++        #types += ['float','float','float','float','float','float','float','float','float','int']
++        inputs += list(gps.datakeys)
++        types +=  list(map(gps.types.__getitem__,gps.datakeys))
++###PATCH-FOOTER:Marvelmind###
++
